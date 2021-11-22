@@ -1,7 +1,7 @@
 #ifndef MODEL_PLAYLIST_MUSIC_H
 #define MODEL_PLAYLIST_MUSIC_H
 
-#import<QObject>
+#include <QObject>
 
 class PlaylistMusic: public QObject
 {

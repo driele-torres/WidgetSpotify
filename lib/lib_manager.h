@@ -1,6 +1,7 @@
 #ifndef LIB_MANAGER_H
 #define LIB_MANAGER_H
 
+#include <QCoreApplication>
 #include <QObject>
 
 #include "db_manager.h"
@@ -13,15 +14,20 @@ class Manager: public db::Manager
 {
     Q_OBJECT
 public:
-    static db::Manager& instance();
+    static Manager &instance();
+
+    bool saveRequest(int code, QByteArray body, QByteArray url);
+
+    QVariantList getPlaylist();
+
+    QVariantMap createPlaylist(QString name);
 protected:
     QList<db::Table*> tables();
     virtual void preSetup(const QString&path);
 private:
     explicit Manager(QObject *parent = nullptr): db::Manager(parent){}
     ~Manager(){}
-
 };
-}
 
+}
 #endif // LIB_MANAGER_H

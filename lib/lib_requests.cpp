@@ -1,8 +1,7 @@
 #include "lib_requests.h"
+#include "lib_manager.h"
 
-#include "model_requests.h"
 #include "network_manager.h"
-#include "db_dao.h"
 
 namespace lib {
 
@@ -32,9 +31,9 @@ Requests &Requests::instance()
     return __i;
 }
 
-QVariant Requests::search(const QString q)
+QVariant Requests::search(const QString q, int limit, int offset)
 {
-    return QVariant();
+    return this->baseRequest(QString("/search?q=track:%1&type=track&include_external=audio&limit=%2&offset%3&market=BR").arg(q, limit, offset).toUtf8());
 }
 
 QVariant Requests::markets()
@@ -68,14 +67,9 @@ QVariant Requests::baseRequest(QByteArray route)
 
     if (network::Manager::instance().call(request)){
         qDebug() << request.response.body;
-        model::Requests response;
-        response.setStatus(request.response.code);
-        response.setBody(QJsonDocument::fromJson(request.response.body).toJson(QJsonDocument::Compact));
-        response.setUrl(request.url.toString().toUtf8());
-        db::Dao dao(this);
-        if (!dao.insert<model::Requests>(&response)){
-            qDebug() << "insert com erro";
-        }
+        lib::Manager::instance().saveRequest( request.response.code,
+                                              QJsonDocument::fromJson(request.response.body).toJson(QJsonDocument::Compact),
+                                              request.url.toString().toUtf8() );
     }
     return RETURN;
 }

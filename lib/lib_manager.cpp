@@ -1,8 +1,8 @@
 #include "lib_manager.h"
 
-#include <QCoreApplication>
 #include "db_connection.h"
 #include "db_manager.h"
+#include "db_dao.h"
 
 #include "model_requests.h"
 
@@ -13,7 +13,7 @@ static void init(){
 Q_COREAPP_STARTUP_FUNCTION(init);
 
 namespace lib {
-    db::Manager &Manager::instance()
+    lib::Manager &Manager::instance()
     {
         static Manager __i;
         return __i;
@@ -37,5 +37,28 @@ namespace lib {
     void Manager::preSetup(const QString&path)
     {
         Q_UNUSED(path)
+    }
+
+    bool Manager::saveRequest(int code, const QByteArray body, const QByteArray url)
+    {
+        model::Requests response;
+        response.setStatus(code);
+        response.setBody(body);
+        response.setUrl(url);
+        db::Dao dao(this);
+        if (!dao.insert<model::Requests>(&response)){
+            return false;
+        }
+        return true;
+    }
+
+    QVariantList Manager::getPlaylist()
+    {
+        return QVariantList();
+    }
+
+    QVariantMap Manager::createPlaylist(QString name)
+    {
+        return QVariantMap();
     }
 }

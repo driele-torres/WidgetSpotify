@@ -13,38 +13,10 @@ namespace lib {
     public:
         static Requests& instance();
 
-    QVariant search(const QString q);
+    QVariant search(const QString q, int limit, int offset);
     QVariant markets();
     QVariant genreSeeds();
     QVariant categories();
-
-//    {
-
-//    country
-
-//      "categories": {
-
-//        "href": "https://api.spotify.com/v1/me/shows?offset=0&limit=20\n",
-
-//        "items": [
-
-//          {}
-
-//        ],
-
-//        "limit": 20,
-
-//        "next": "https://api.spotify.com/v1/me/shows?offset=1&limit=1",
-
-//        "offset": 0,
-
-//        "previous": "https://api.spotify.com/v1/me/shows?offset=1&limit=1",
-
-//        "total": 4
-
-//      }
-
-//    }
 
     private:
         explicit Requests(QObject *parent = nullptr): QObject(parent){}

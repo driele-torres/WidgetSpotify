@@ -1,13 +1,10 @@
 #include <QApplication>
-#include "lib_requests.h"
+#include "basewindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    lib::Requests::instance().categories();
+    BaseWindow w(nullptr);
+    w.show();
     return a.exec();
 }
-
-//#include "basewindow.h"
-//BaseWindow w;
-//w.show();
