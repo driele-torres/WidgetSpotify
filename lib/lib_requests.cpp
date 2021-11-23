@@ -31,9 +31,12 @@ Requests &Requests::instance()
     return __i;
 }
 
-QVariant Requests::search(const QString q, int limit, int offset)
+QVariant Requests::search(const QString q, int offset)
 {
-    return this->baseRequest(QString("/search?q=track:%1&type=track&include_external=audio&limit=%2&offset%3&market=BR").arg(q, limit, offset).toUtf8());
+    auto base = QStringLiteral("/search?q=").append(q);
+    base.append("&type=track&market=BR&include_external=audio");
+    base.append("&offset=").append(QString::number(offset));
+    return this->baseRequest(base.toUtf8());
 }
 
 QVariant Requests::markets()
@@ -66,10 +69,13 @@ QVariant Requests::baseRequest(QByteArray route)
     request.url.setUrl(base_url + route);
 
     if (network::Manager::instance().call(request)){
-        qDebug() << request.response.body;
+        QJsonDocument docResponse = QJsonDocument::fromJson(request.response.body);
         lib::Manager::instance().saveRequest( request.response.code,
-                                              QJsonDocument::fromJson(request.response.body).toJson(QJsonDocument::Compact),
+                                              docResponse.toJson(QJsonDocument::Compact),
                                               request.url.toString().toUtf8() );
+        return docResponse.toVariant();
+    } else {
+        qDebug() << request.response.body;
     }
     return RETURN;
 }
@@ -121,6 +127,7 @@ bool Requests::getToken()
 
             _validation = QDateTime::currentDateTime().addSecs(expires_in.toLongLong());
             _token = token_type.append(' ').append(token);
+            qDebug() << _token;
             return true;
         }
     }

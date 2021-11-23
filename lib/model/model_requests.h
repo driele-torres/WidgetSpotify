@@ -5,7 +5,6 @@
 #include <QDateTime>
 
 #include "db_macros.h"
-#include "db_table.h"
 
 namespace model {
 

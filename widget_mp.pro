@@ -13,10 +13,10 @@ INCLUDEPATH += $$PWD/
 
 SOURCES += \
     main.cpp \
-    basewindow.cpp
+    playlists_window.cpp
 
 HEADERS += \
-    basewindow.h
+    playlists_window.h
 
 FORMS += \
-    basewindow.ui
+    playlists_window.ui
